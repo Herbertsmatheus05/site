@@ -57,20 +57,36 @@
 
   <div class="hearts">💖💖💖</div>
 
-  <script>
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycby_Cg1dPKuj-Lnjoj9dqSGQZbIw8cbwjT0zVYu3wt4dBWpT24oGYegwmDojE5EJFL6u/exec';
-    const entryID = 'Filme Escolhido';  // Certifique-se de que 'filmeEscolhido' é o nome do campo no seu Google Sheets
+  <!-- Firebase SDK (modular) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBq89PTeNQ7RQySa7PbRQ4YCK-_tz6CKBE",
+      authDomain: "site-tita.firebaseapp.com",
+      databaseURL: "https://site-tita-default-rtdb.firebaseio.com",
+      projectId: "site-tita",
+      storageBucket: "site-tita.firebasestorage.app",
+      messagingSenderId: "851325010653",
+      appId: "1:851325010653:web:6cd2305b483de440a61134",
+      measurementId: "G-7V7E80RRHJ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);  // Realtime Database
+    const analytics = getAnalytics(app);
 
     function enviarResposta(filme) {
-      const formData = new URLSearchParams();
-      formData.append(entryID, filme);
-
-      fetch(scriptUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
+      const filmeRef = ref(db, 'filmes');
+      push(filmeRef, {
+        nome: filme,
+        data: new Date().toISOString()
       }).then(() => {
-        alert('Escolha enviada com sucesso! ❤️');
+        alert('Escolha enviada com sucesso!');
+      }).catch((error) => {
+        alert('Erro ao enviar: ' + error.message);
       });
     }
 
