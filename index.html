@@ -84,7 +84,7 @@
         nome: filme,
         data: new Date().toISOString()
       }).then(() => {
-        alert('Escolha enviada com sucesso!');
+        alert('Escolha enviada com sucesso! ❤️');
       }).catch((error) => {
         alert('Erro ao enviar: ' + error.message);
       });
@@ -97,7 +97,7 @@
         return;
       }
       enviarResposta(filme);
-      document.getElementById('outroFilme').value = '';
+      document.getElementById('outroFilme').value = '';  // Limpa o campo após envio
     }
   </script>
 </body>
