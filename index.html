@@ -2,60 +2,93 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Escolha um Filme</title>
+  <title>Clube Cibernético</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #fff0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: 'Courier New', monospace;
+      background-color: #000;
+      color: #0f0;
+      text-align: center;
       padding-top: 50px;
     }
     h1 {
-      margin-bottom: 30px;
-      color: #d00000;
+      text-shadow: 0 0 5px #0f0;
     }
-    button, input[type="text"] {
-      margin: 10px;
-      padding: 15px 25px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 2px solid #d00000;
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
     button {
-      background-color: #d00000;
-      color: white;
+      background-color: black;
+      color: #0f0;
+      border: 2px solid #0f0;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
+      text-transform: uppercase;
+      position: relative;
     }
     button:hover {
-      background-color: #a00000;
+      background-color: #0f0;
+      color: black;
+    }
+    .hidden {
+      display: none;
+    }
+    .scan {
+      font-size: 20px;
+      color: red;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
     }
     input[type="text"] {
-      border: 2px solid #d00000;
+      border: 2px solid #0f0;
+      padding: 10px;
+      background-color: #000;
+      color: #0f0;
+      font-size: 16px;
+      margin-top: 10px;
       width: 250px;
-    }
-    .hearts {
-      font-size: 24px;
-      color: #d00000;
-      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>❤️ Qual filme vamos assistir? ❤️</h1>
-
-  <button onclick="enviarResposta('Shrek')">Shrek</button>
-  <button onclick="enviarResposta('Harry Potter')">Harry Potter</button>
-  <button onclick="enviarResposta('A Voz do Silêncio')">A Voz do Silêncio</button>
-
-  <div style="margin-top:30px;">
-    <input type="text" id="outroFilme" placeholder="Outro filme..." />
-    <button onclick="enviarOutro()">Enviar</button>
+  <div id="startScreen" class="container">
+    <h1>⚠️ ACESSO RESTRITO ⚠️</h1>
+    <p>Você está tentando entrar em um sistema protegido.</p>
+    <button onclick="iniciarAcesso()">Continuar</button>
+    <button id="sairBtn" onclick="moverBotao()">Sair</button>
   </div>
 
-  <div class="hearts">💖💖💖</div>
+  <div id="trackingScreen" class="container hidden">
+    <h1 class="scan">RASTREANDO SUA LOCALIZAÇÃO...</h1>
+    <p>Aguarde...</p>
+  </div>
+
+  <div id="accessGranted" class="container hidden">
+    <h1>LOCALIZAÇÃO ENCONTRADA...</h1>
+    <h1>ACESSO CONCEDIDO</h1>
+    <h1>BEM-VINDA, MARIA CLARA</h1>
+  </div>
+
+  <div id="movieScreen" class="container hidden">
+    <h1>💻 Escolha um Filme 💻</h1>
+    <button onclick="enviarResposta('Matrix')">Matrix</button>
+    <button onclick="enviarResposta('Tron: O Legado')">Tron</button>
+    <button onclick="enviarResposta('Mr. Robot: Special')">Mr. Robot</button>
+    <div>
+      <input type="text" id="outroFilme" placeholder="Outro filme..." />
+      <button onclick="enviarOutro()">Enviar Outro</button>
+    </div>
+  </div>
 
   <!-- Firebase SDK (modular) -->
   <script type="module">
@@ -73,22 +106,24 @@
       appId: "1:851325010653:web:6cd2305b483de440a61134"
     };
 
-    // Inicializa Firebase
+    // Inicializa o Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
     console.log("Firebase inicializado com sucesso!");
 
-    window.enviarResposta = function (filme) {
+    // Função para enviar a resposta (filme escolhido)
+    window.enviarResposta = function(filme) {
       console.log("Tentando enviar:", filme);
       
+      // Grava no Firebase Realtime Database
       push(ref(db, 'filmes'), {
         nome: filme,
         data: new Date().toISOString()
       })
       .then(() => {
         console.log("Sucesso ao enviar:", filme);
-        alert('Escolha enviada com sucesso! ❤️');
+        alert('Escolha enviada com sucesso!');
       })
       .catch((error) => {
         console.error("Erro ao enviar:", error);
@@ -96,7 +131,8 @@
       });
     };
 
-    window.enviarOutro = function () {
+    // Função para enviar o filme digitado
+    window.enviarOutro = function() {
       const filme = document.getElementById('outroFilme').value.trim();
       if (!filme) {
         alert("Digite o nome de um filme!");
@@ -104,6 +140,30 @@
       }
       enviarResposta(filme);
       document.getElementById('outroFilme').value = '';
+    };
+
+    // Função para mover o botão "Sair"
+    window.moverBotao = function() {
+      let btn = document.getElementById('sairBtn');
+      let x = Math.random() * (window.innerWidth - 100);
+      let y = Math.random() * (window.innerHeight - 50);
+      btn.style.position = 'absolute';
+      btn.style.left = `${x}px`;
+      btn.style.top = `${y}px`;
+    };
+
+    // Função para iniciar o acesso
+    window.iniciarAcesso = function() {
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('trackingScreen').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('trackingScreen').classList.add('hidden');
+        document.getElementById('accessGranted').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('accessGranted').classList.add('hidden');
+          document.getElementById('movieScreen').classList.remove('hidden');
+        }, 2000);
+      }, 3000);
     };
   </script>
 </body>
