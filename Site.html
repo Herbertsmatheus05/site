@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Escolha um Filme</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fafafa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    button, input[type="text"] {
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input[type="text"] {
+      border: 1px solid #ccc;
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Qual filme vamos assistir?</h1>
+
+  <button onclick="enviarResposta('Shrek')">Shrek</button>
+  <button onclick="enviarResposta('Harry Potter')">Harry Potter</button>
+  <button onclick="enviarResposta('A Voz do Silêncio')">A Voz do Silêncio</button>
+
+  <div style="margin-top:30px;">
+    <input type="text" id="outroFilme" placeholder="Outro filme..." />
+    <button onclick="enviarOutro()">Enviar</button>
+  </div>
+
+  <script>
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSc4Vd5GHyEkNtLXPSVrPAZ0mX4fGzlTvIdBnSXywdCvoC8kCA/formResponse';
+    const entryID = 'entry.2112138384'; // ID real do campo (peguei direto do seu form 😉)
+
+    function enviarResposta(filme) {
+      const data = new FormData();
+      data.append(entryID, filme);
+
+      fetch(formUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: data
+      }).then(() => {
+        alert('Escolha enviada com sucesso!');
+      });
+    }
+
+    function enviarOutro() {
+      const filme = document.getElementById('outroFilme').value;
+      if (!filme) {
+        alert("Digite o nome de um filme!");
+        return;
+      }
+      enviarResposta(filme);
+      document.getElementById('outroFilme').value = '';
+    }
+  </script>
+
+</body>
+</html>
