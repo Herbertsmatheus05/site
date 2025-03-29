@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fafafa;
+      background-color: #fff0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -14,31 +14,37 @@
     }
     h1 {
       margin-bottom: 30px;
+      color: #d00000;
     }
     button, input[type="text"] {
       margin: 10px;
       padding: 15px 25px;
       font-size: 16px;
       border-radius: 8px;
-      border: none;
+      border: 2px solid #d00000;
     }
     button {
-      background-color: #4CAF50;
+      background-color: #d00000;
       color: white;
       cursor: pointer;
+      transition: 0.3s;
     }
     button:hover {
-      background-color: #45a049;
+      background-color: #a00000;
     }
     input[type="text"] {
-      border: 1px solid #ccc;
+      border: 2px solid #d00000;
       width: 250px;
+    }
+    .hearts {
+      font-size: 24px;
+      color: #d00000;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-
-  <h1>Qual filme vamos assistir?</h1>
+  <h1>❤️ Qual filme vamos assistir? ❤️</h1>
 
   <button onclick="enviarResposta('Shrek')">Shrek</button>
   <button onclick="enviarResposta('Harry Potter')">Harry Potter</button>
@@ -49,20 +55,22 @@
     <button onclick="enviarOutro()">Enviar</button>
   </div>
 
+  <div class="hearts">💖💖💖</div>
+
   <script>
     const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSc4Vd5GHyEkNtLXPSVrPAZ0mX4fGzlTvIdBnSXywdCvoC8kCA/formResponse';
-    const entryID = 'entry.2112138384'; // ID real do campo (peguei direto do seu form 😉)
+    const entryID = 'entry.2112138384';
 
     function enviarResposta(filme) {
-      const data = new FormData();
-      data.append(entryID, filme);
+      const formData = new URLSearchParams();
+      formData.append(entryID, filme);
 
       fetch(formUrl, {
         method: 'POST',
         mode: 'no-cors',
-        body: data
+        body: formData
       }).then(() => {
-        alert('Escolha enviada com sucesso!');
+        alert('Escolha enviada com sucesso! ❤️');
       });
     }
 
@@ -76,6 +84,5 @@
       document.getElementById('outroFilme').value = '';
     }
   </script>
-
 </body>
 </html>
