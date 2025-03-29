@@ -61,44 +61,50 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
 
+    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBq89PTeNQ7RQySa7PbRQ4YCK-_tz6CKBE",
       authDomain: "site-tita.firebaseapp.com",
       databaseURL: "https://site-tita-default-rtdb.firebaseio.com",
       projectId: "site-tita",
-      storageBucket: "site-tita.firebasestorage.app",
+      storageBucket: "site-tita.appspot.com",
       messagingSenderId: "851325010653",
-      appId: "1:851325010653:web:6cd2305b483de440a61134",
-      measurementId: "G-7V7E80RRHJ"
+      appId: "1:851325010653:web:6cd2305b483de440a61134"
     };
 
+    // Inicializa Firebase
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);  // Realtime Database
-    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
 
-    function enviarResposta(filme) {
-      const filmeRef = ref(db, 'filmes');
-      push(filmeRef, {
+    console.log("Firebase inicializado com sucesso!");
+
+    window.enviarResposta = function (filme) {
+      console.log("Tentando enviar:", filme);
+      
+      push(ref(db, 'filmes'), {
         nome: filme,
         data: new Date().toISOString()
-      }).then(() => {
+      })
+      .then(() => {
+        console.log("Sucesso ao enviar:", filme);
         alert('Escolha enviada com sucesso! ❤️');
-      }).catch((error) => {
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar:", error);
         alert('Erro ao enviar: ' + error.message);
       });
-    }
+    };
 
-    function enviarOutro() {
-      const filme = document.getElementById('outroFilme').value;
+    window.enviarOutro = function () {
+      const filme = document.getElementById('outroFilme').value.trim();
       if (!filme) {
         alert("Digite o nome de um filme!");
         return;
       }
       enviarResposta(filme);
-      document.getElementById('outroFilme').value = '';  // Limpa o campo após envio
-    }
+      document.getElementById('outroFilme').value = '';
+    };
   </script>
 </body>
 </html>
