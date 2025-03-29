@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Clube Cibernético</title>
+  <title>⚠️ SISTEMA COMPROMETIDO ⚠️</title>
   <style>
     body {
       font-family: 'Courier New', monospace;
@@ -10,6 +10,9 @@
       color: #0f0;
       text-align: center;
       padding-top: 50px;
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
     }
     h1 {
       text-shadow: 0 0 5px #0f0;
@@ -58,29 +61,74 @@
       margin-top: 10px;
       width: 250px;
     }
+    .alert {
+      color: red;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+
+    /* Efeito de letras caindo estilo "Matrix" */
+    .matrix {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      display: none;
+    }
+    .matrix div {
+      position: absolute;
+      font-size: 20px;
+      color: #0f0;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% {
+        transform: translateY(-100%);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Tela de hacking com letras caindo -->
+  <div id="matrixEffect" class="matrix"></div>
+
   <div id="startScreen" class="container">
-    <h1>⚠️ ACESSO RESTRITO ⚠️</h1>
-    <p>Você está tentando entrar em um sistema protegido.</p>
-    <button onclick="iniciarAcesso()">Continuar</button>
+    <h1>⚠️ ACESSO NÃO AUTORIZADO ⚠️</h1>
+    <p>Você está tentando acessar um sistema comprometido.</p>
+    <button onclick="confirmarAcesso()">Continuar</button>
     <button id="sairBtn" onclick="moverBotao()">Sair</button>
   </div>
 
+  <!-- Tela de confirmação -->
+  <div id="confirmScreen" class="container hidden">
+    <h1>Você tem certeza?</h1>
+    <button onclick="iniciarAcesso()">Sim</button>
+    <button onclick="cancelarAcesso()">Não</button>
+  </div>
+
   <div id="trackingScreen" class="container hidden">
-    <h1 class="scan">RASTREANDO SUA LOCALIZAÇÃO...</h1>
-    <p>Aguarde...</p>
+    <h1 class="scan">RASTREANDO SEU IP...</h1>
+    <p>ATENÇÃO: Dados sensíveis estão sendo acessados.</p>
   </div>
 
   <div id="accessGranted" class="container hidden">
-    <h1>LOCALIZAÇÃO ENCONTRADA...</h1>
-    <h1>ACESSO CONCEDIDO</h1>
+    <h1>ACESSO CONCEDIDO...</h1>
+    <h1>⚡ DADOS COMPROMETIDOS ⚡</h1>
     <h1>BEM-VINDA, MARIA CLARA</h1>
+    <p class="alert">Seus dados estão sendo roubados. Continue navegando...</p>
   </div>
 
   <div id="movieScreen" class="container hidden">
-    <h1>💻 Escolha um Filme 💻</h1>
+    <h1>💻 Selecione um Filme Para Roubar Dados 💻</h1>
     <button onclick="enviarResposta('Matrix')">Matrix</button>
     <button onclick="enviarResposta('Tron: O Legado')">Tron</button>
     <button onclick="enviarResposta('Mr. Robot: Special')">Mr. Robot</button>
@@ -88,6 +136,7 @@
       <input type="text" id="outroFilme" placeholder="Outro filme..." />
       <button onclick="enviarOutro()">Enviar Outro</button>
     </div>
+    <p class="alert">ATENÇÃO: Enviar dados pessoais pode comprometer seu sistema.</p>
   </div>
 
   <!-- Firebase SDK (modular) -->
@@ -123,7 +172,7 @@
       })
       .then(() => {
         console.log("Sucesso ao enviar:", filme);
-        alert('Escolha enviada com sucesso!');
+        alert('Escolha enviada com sucesso! Dados comprometidos...');
       })
       .catch((error) => {
         console.error("Erro ao enviar:", error);
@@ -152,19 +201,61 @@
       btn.style.top = `${y}px`;
     };
 
+    // Função para confirmar acesso
+    window.confirmarAcesso = function() {
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('confirmScreen').classList.remove('hidden');
+      moverBotao(); // O botão "Sair" continua se movendo
+    };
+
+    // Função para cancelar o acesso
+    window.cancelarAcesso = function() {
+      alert("Acesso negado. Sistema seguro.");
+      location.reload(); // Recarrega a página para reiniciar
+    };
+
     // Função para iniciar o acesso
     window.iniciarAcesso = function() {
-      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('confirmScreen').classList.add('hidden');
       document.getElementById('trackingScreen').classList.remove('hidden');
       setTimeout(() => {
         document.getElementById('trackingScreen').classList.add('hidden');
         document.getElementById('accessGranted').classList.remove('hidden');
+        
+        // Inicia o efeito de letras caindo quando os dados estão sendo roubados
+        setTimeout(() => {
+          document.getElementById('matrixEffect').style.display = 'block';
+          iniciarLetrasCaindo();
+        }, 2000);
+
         setTimeout(() => {
           document.getElementById('accessGranted').classList.add('hidden');
           document.getElementById('movieScreen').classList.remove('hidden');
-        }, 2000);
+        }, 5000);
       }, 3000);
     };
+
+    // Função para iniciar as letras caindo
+    function iniciarLetrasCaindo() {
+      const matrix = document.getElementById('matrixEffect');
+      const numeroDeLetras = 300; // Aumenta o número de letras caindo
+
+      for (let i = 0; i < numeroDeLetras; i++) {
+        let letra = document.createElement('div');
+        letra.innerText = getRandomChar();
+        letra.style.left = `${Math.random() * 100}%`; // Posição horizontal aleatória
+        letra.style.animationDuration = `${Math.random() * 5 + 5}s`; // Velocidade das letras caindo
+        letra.style.animationDelay = `${Math.random() * 2}s`; // Atraso na animação
+
+        matrix.appendChild(letra);
+      }
+    }
+
+    // Função para obter um caractere aleatório (letra ou número)
+    function getRandomChar() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+    }
   </script>
 </body>
 </html>
