@@ -58,14 +58,14 @@
   <div class="hearts">💖💖💖</div>
 
   <script>
-    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSc4Vd5GHyEkNtLXPSVrPAZ0mX4fGzlTvIdBnSXywdCvoC8kCA/formResponse';
-    const entryID = 'entry.2112138384';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbz3-Y8an0NC5RJ2JUmTXmm5DOmr7XyZvD3tQB2AWDlqVBQ8zwEcf5pN4j9rffOyzkRr/exec';
+    const entryID = 'filmeEscolhido';  // Certifique-se de que 'filmeEscolhido' é o nome do campo no seu Google Sheets
 
     function enviarResposta(filme) {
       const formData = new URLSearchParams();
       formData.append(entryID, filme);
 
-      fetch(formUrl, {
+      fetch(scriptUrl, {
         method: 'POST',
         mode: 'no-cors',
         body: formData
